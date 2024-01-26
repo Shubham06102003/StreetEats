@@ -1,6 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:strtet/config/colors.dart';
+import 'package:strtet/screens/home/home_screen.dart';
 import 'package:strtet/screens/signin_screen.dart';
+import 'package:strtet/screens/vendor_overview/nearby_street_food.dart';
+import 'package:strtet/screens/vendor_overview/vendor_overview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,20 +20,33 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const SignInScreen(),
+          primaryColor: primaryColor,
+          scaffoldBackgroundColor: scaffoldBackgroundColor),
+      // home: const SignInScreen(),
+      routes: {
+        '/': (context) => Root(),
+        '/home': (context) => HomeScreen(),
+        '/sign-in': (context) => SignInScreen(),
+        '/vendor-overview': (context) => VendorOverview(),
+        '/near-food': (context) => NearbyStreetFood(),
+      },
     );
   }
+}
+
+class Root extends StatelessWidget{
+  final user = FirebaseAuth.instance.currentUser;
+
+  @override
+  Widget build(BuildContext context) {
+    if (user!=null){
+      return HomeScreen();
+    } else {
+      return SignInScreen();
+    }
+  }
+
+
 }
